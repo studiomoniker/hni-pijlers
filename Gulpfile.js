@@ -2,8 +2,8 @@ var gulp = require('gulp');
 var autoprefixer = require('gulp-autoprefixer');
 var concat = require('gulp-concat');
 var zip = require('gulp-zip');
-var rename = require("gulp-rename");
-var uglify = require("gulp-uglify");
+var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
 
 // Run CSS through autoprefixed
 gulp.task('css', function () {
@@ -32,20 +32,24 @@ gulp.task('jsmin', function () {
 
 // Copy html and assets to dist
 gulp.task('copy', function () {
-	return gulp.src(['src/index.html', 'src/assets/*'])
+	return gulp.src(['src/index.html', 'src/assets/**/**'], {base: 'src/'})
 		.pipe(gulp.dest('dist'));
+});
+
+// All except zip
+gulp.task('all', function () {
+	return gulp.start('copy', 'jsmin', 'jsconcat', 'css');
 });
 
 // Watch
 gulp.task('default', function () {
-	gulp.start('css', 'jsconcat', 'jsmin', 'copy');
 	gulp.watch('src/**/*.css', ['css']);
 	gulp.watch('src/**/*.js', ['jsconcat', 'jsmin']);
 });
 
 // Package
 gulp.task('zip', function () {
-	gulp.start('css', 'jsconcat', 'jsmin', 'copy');
+	gulp.start('all');
 	gulp.src(['dist/*', 'other/*'])
 		.pipe(zip('Cover.zip'))
 		.pipe(gulp.dest(''));
