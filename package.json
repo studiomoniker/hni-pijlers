@@ -1,11 +1,12 @@
 {
   "name": "CoverForNHI",
   "version": "1.0.0",
-  "description": "",
+  "description": "Template for NHI covers",
   "main": "dist/index.html",
   "author": "Studio Moniker",
   "license": "MIT",
   "devDependencies": {
+    "gulp": "^3.4.0",
     "gulp-autoprefixer": "^2.0.0",
     "gulp-concat": "^2.2.0",
     "gulp-rename": "^1.2.0",
