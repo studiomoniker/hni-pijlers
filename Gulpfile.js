@@ -37,14 +37,16 @@ gulp.task('copy', function () {
 });
 
 // All except zip
-gulp.task('all', function () {
-	return gulp.start('copy', 'jsmin', 'jsconcat', 'css');
-});
+gulp.task('all', ['copy', 'jsconcat', 'jsmin', 'css']);
 
 // Watch
-gulp.task('default', function () {
-	gulp.watch('src/**/*.css', ['css']);
-	gulp.watch('src/**/*.js', ['jsconcat', 'jsmin']);
+gulp.task('watch', function () {
+	gulp.watch('./src/*.css', ['css']);
+	gulp.watch('./src/*.js', ['jsconcat', 'jsmin']);
+});
+
+// Default
+gulp.task('default', ['all', 'watch']);
 });
 
 // Package
