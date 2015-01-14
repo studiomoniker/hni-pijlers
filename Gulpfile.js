@@ -4,6 +4,7 @@ var concat = require('gulp-concat');
 var zip = require('gulp-zip');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
+var ghpages = require('gulp-gh-pages');
 
 // Run CSS through autoprefixed
 gulp.task('css', function () {
@@ -47,6 +48,11 @@ gulp.task('watch', function () {
 
 // Default
 gulp.task('default', ['all', 'watch']);
+
+// Push to gh-pages
+gulp.task('deploy', function () {
+	return gulp.src('./dist/**/*')
+		.pipe(ghpages());
 });
 
 // Package
