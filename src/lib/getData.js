@@ -1,4 +1,4 @@
-var BASE64 = {
+var Base64 = {
   // public method for decoding
   decode: function (input) {
     return this._utf8_decode(atob(input));
