@@ -5,6 +5,7 @@ var zip = require('gulp-zip');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var ghpages = require('gulp-gh-pages');
+var inlinesource = require('gulp-inline-source');
 
 // Run CSS through autoprefixed
 gulp.task('css', function () {
@@ -18,7 +19,7 @@ gulp.task('css', function () {
 
 // Combine js
 gulp.task('jsconcat', function () {
-	return gulp.src(['src/lib/*.js', 'src/*.js'])
+	return gulp.src(['src/lib/*.js', 'src/app.js'])
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest('dist'));
 });
@@ -31,19 +32,26 @@ gulp.task('jsmin', function () {
 		.pipe(gulp.dest('dist'));
 });
 
+gulp.task('html', function() {
+	return gulp.src('src/index.html')
+	.pipe(inlinesource())
+	.pipe(gulp.dest('dist'));
+})
+
 // Copy html and assets to dist
 gulp.task('copy', function () {
-	return gulp.src(['src/index.html', 'src/assets/**/**'], {base: 'src/'})
+	return gulp.src(['src/assets/**/**'], {base: 'src/'})
 		.pipe(gulp.dest('dist'));
 });
 
 // All except zip
-gulp.task('all', ['copy', 'jsconcat', 'jsmin', 'css']);
+gulp.task('all', ['copy', 'html', 'jsconcat', 'jsmin', 'css']);
 
 // Watch
 gulp.task('watch', function () {
+	gulp.watch('./src/*.html', ['html']);
 	gulp.watch('./src/*.css', ['css']);
-	gulp.watch('./src/*.js', ['jsconcat', 'jsmin']);
+	gulp.watch('./src/*.js', ['html', 'jsconcat', 'jsmin']);
 });
 
 // Default
