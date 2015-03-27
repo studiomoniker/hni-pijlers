@@ -18,15 +18,10 @@ gulp.task('css', function () {
 });
 
 // Combine js
-gulp.task('jsconcat', function () {
+gulp.task('js', function () {
 	return gulp.src(['src/lib/*.js', 'src/app.js'])
 		.pipe(concat('app.js'))
-		.pipe(gulp.dest('dist'));
-});
-
-// Minify js
-gulp.task('jsmin', function () {
-	return gulp.src('dist/app.js')
+		.pipe(gulp.dest('dist'))
 		.pipe(rename('app-min.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest('dist'));
@@ -45,13 +40,13 @@ gulp.task('copy', function () {
 });
 
 // All except zip
-gulp.task('all', ['copy', 'html', 'jsconcat', 'jsmin', 'css']);
+gulp.task('all', ['copy', 'html', 'js', 'css']);
 
 // Watch
 gulp.task('watch', function () {
 	gulp.watch('./src/*.html', ['html']);
 	gulp.watch('./src/*.css', ['css']);
-	gulp.watch('./src/*.js', ['html', 'jsconcat', 'jsmin']);
+	gulp.watch('./src/*.js', ['html', 'js']);
 });
 
 // Default
