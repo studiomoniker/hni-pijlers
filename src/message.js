@@ -1,6 +1,6 @@
 new function() {
   function postMessage(data) {
-    parent.postMessage(JSON.stringify(data), '*');
+    window.parent.postMessage(JSON.stringify(data), '*');
   }
 
   window.addEventListener('message', function (event) {
