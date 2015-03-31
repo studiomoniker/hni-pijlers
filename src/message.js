@@ -28,7 +28,7 @@ new function() {
   });
 
   // Get unique cover id from url:
-  // Tell parent saying that loading of this iframe is ready
+  // Tell parent that loading of this iframe is ready
   postMessage({
     status: 'ready',
     coverId: (window.location.pathname).split('/')[4]
