@@ -1,48 +1,36 @@
 new function() {
-  var doc = document;
-  var win = window;
-  var location = window.location;
-  var body = doc.body;
-  function redirectParent(url) {
-    parent.postMessage('{"status": "redirect", "domain_path": "' + url + '"}', '*');
+  function postMessage(data) {
+    parent.postMessage(JSON.stringify(data), '*');
   }
 
-  function getData(callback) {
+  window.addEventListener('message', function (event) {
+    var data = JSON.parse(event.data);
+    // Ignore messages that do not contain the domain_path property:
+    if (!data.domain_path)
+      return;
 
-    // Somehow determines if we're on the homepage. no idea what they came up here...
-    function isHomepage() {
-      var match = RegExp('[?&]homepage=([^&]*)').exec(location.search);
-      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-    }
-
-    // Receive data having title and subtitle and put in on the page
-    window.addEventListener('message', function (e) {
-      var data = JSON.parse(e.data);
-      if (data.domain_path !== undefined) {
-        data.isHomepage = isHomepage();
-        callback(msg);
-      }
-    });
-
-    // Create unique cover id
-    var coverId = (location.pathname).split('/')[4];
-
-    // Send information to parent saying that loading of the iframe is ready
-    parent.postMessage('{"status": "ready", "coverId": "' + coverId + '"}', '*');
-  }
-
-
-  getData(function (data) {
     // Uncomment if this is an institutional cover:
-    // document.querySelector('h1').innerHTML = msg.title;
-    // document.querySelector('h2').innerHTML = msg.subtitle;
-    
-    // Add link to body to have the parent redirect to the magazine URL
-    if (data.isHomepage) {
-      body.addEventListener('click', function() {
-        redirectParent(data.domain_path);
+    // document.querySelector('h1').innerHTML = data.title;
+    // document.querySelector('h2').innerHTML = data.subtitle;
+
+    // If we are on the homepage, add a link to body to have the parent redirect to the magazine URL:
+    var onHomepage = /homepage\=1/.test(window.location.search);
+    if (onHomepage) {
+      document.body.addEventListener('click', function() {
+        // Tell parent to redirect us:
+        postMessage({
+          status: 'redirect',
+          domain_path: data.domain_path
+        });
       });
-      body.style.cursor = 'pointer';
-    }
+      document.body.style.cursor = 'pointer';
+    };
+  });
+
+  // Get unique cover id from url:
+  // Tell parent saying that loading of this iframe is ready
+  postMessage({
+    status: 'ready',
+    coverId: (window.location.pathname).split('/')[4]
   });
 }
