@@ -6,10 +6,14 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var ghpages = require('gulp-gh-pages');
 var inlinesource = require('gulp-inline-source');
+var sass = require('gulp-sass');
 
 // Run CSS through autoprefixed
 gulp.task('css', function () {
-	return gulp.src('src/app.css')
+  return gulp.src('style/*.scss')
+    .pipe(sass({
+      errLogToConsole: true
+    }))
 		.pipe(autoprefixer({
 			browsers: ['last 2 versions'],
 			cascade: false
