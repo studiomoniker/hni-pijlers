@@ -10,7 +10,7 @@ var sass = require('gulp-sass');
 
 // Run CSS through autoprefixed
 gulp.task('css', function () {
-  return gulp.src('style/*.scss')
+  return gulp.src('src/style/*.scss')
     .pipe(sass({
       errLogToConsole: true
     }))
@@ -23,7 +23,7 @@ gulp.task('css', function () {
 
 // Combine js
 gulp.task('js', function () {
-	return gulp.src(['src/lib/*.js', 'src/app.js'])
+	return gulp.src(['src/js/lib/*.js', 'src/js/app.js'])
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest('dist'))
 		.pipe(rename('app-min.js'))
