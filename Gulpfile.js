@@ -32,6 +32,10 @@ new function() {
       })
         .transform(babelify)
         .bundle()
+        .on('error', function(err){
+          this.emit('end');
+          $.notify.onError()(err);
+        })
         .pipe(source('app.js'))
         .pipe(buff())
         .pipe(gulp.dest('dist'))
