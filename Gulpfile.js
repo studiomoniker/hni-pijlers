@@ -17,31 +17,31 @@ gulp.task('css', function () {
 
 // Combine js
 new function() {
-  var browserify = require('browserify')
-  var babelify = require('babelify')
-  var glob = require('glob')
-  var source = require('vinyl-source-stream')
-  var buff = require('vinyl-buffer')
+  var browserify = require('browserify');
+  var babelify = require('babelify');
+  var glob = require('glob');
+  var source = require('vinyl-source-stream');
+  var buff = require('vinyl-buffer');
 
   gulp.task('js', function () {
     var files = glob.sync('./src/js/**/*.js');
 
     return browserify({
-        entries: files,
-        debug: true
+      entries: files,
+      debug: true
+    })
+      .transform(babelify)
+      .bundle()
+      .on('error', function(err){
+        this.emit('end');
+        $.notify.onError()(err);
       })
-        .transform(babelify)
-        .bundle()
-        .on('error', function(err){
-          this.emit('end');
-          $.notify.onError()(err);
-        })
-        .pipe(source('app.js'))
-        .pipe(buff())
-        .pipe(gulp.dest('dist'))
-        .pipe($.rename('app-min.js'))
-        .pipe($.uglify())
-        .pipe(gulp.dest('dist'));
+      .pipe(source('app.js'))
+      .pipe(buff())
+      .pipe(gulp.dest('dist'))
+      .pipe($.rename('app-min.js'))
+      .pipe($.uglify())
+      .pipe(gulp.dest('dist'));
   });
 }
 
