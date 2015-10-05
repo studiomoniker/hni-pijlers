@@ -26,5 +26,6 @@
     "envify": "^3.4.0"
   },
   "dependencies": {
+    "points": "git+https://vit-ruller@github.com/vit-ruller/Points.git"
   }
 }
