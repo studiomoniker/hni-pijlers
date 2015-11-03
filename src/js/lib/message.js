@@ -24,7 +24,7 @@ new function() {
         });
       });
       document.body.style.cursor = 'pointer';
-    };
+    }
   });
 
   // Get unique cover id from url:
@@ -33,4 +33,4 @@ new function() {
     status: 'ready',
     coverId: (window.location.pathname).split('/')[4]
   });
-}
+};
