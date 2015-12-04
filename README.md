@@ -22,9 +22,8 @@ To use this boilerplate, your machine needs to have Node.js and Gulp installed:
 
 ## Boilerplate Installation
 
-1. Click on Download ZIP  or clone this repository to download the boilerplate.
-2. Open Terminal.app
-3. In Terminal, go to the cover directory: `cd /path/to/cover/directory` or drag the cover folder onto the Terminal icon.
+1. To download the boilerplate click on `Download ZIP`  or clone this git repository.
+2. Open Terminal.app and go to the cover directory: `cd /path/to/cover/directory` or drag the cover folder onto the Terminal icon.
 4. Run `npm install` to install the necessary dependencies
 5. Run `gulp` to build the cover
 6. The `dist` directory now contains the built web cover!
@@ -37,11 +36,13 @@ To use this boilerplate, your machine needs to have Node.js and Gulp installed:
 
 ## Locations
 
-- All js/sass/html source files are located in `/src`.
-- Javascript goes into `/src/js`. The main entry point is `app.js`.
-- By default we import `/src/js/message.js`, which is used to make the cover clickable on the homepage, to send users to the web magazine.
+- All files located in `assets` will be automatically copied to `dist` (don't keep your files in the `dist` directory)
+- `index.html` is located in `assets`
+- SASS is located in `/style`. The main entry point is `main.scss`. This is built to `/dist/style.css`
+- Javascript is located in `/src`. The main entry point is `app.js`. This is built to `/dist/app.js`
+- By default we import `/src/message.js`, which is used to make the cover clickable on the homepage, to send users to the web magazine.
 - Proxy images are located in `/other`. Edit the `settings.ini` file to point to the correct filenames (!)
 
-## FAQ
+## Misc
 
 - Don't want your code inlined, when running `gulp package`? Remove the two `inline` attributes from `/src/index.html`
