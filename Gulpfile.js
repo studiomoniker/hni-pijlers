@@ -111,7 +111,7 @@ gulp.task('inline', ['js', 'html'], function() {
 });
 
 gulp.task('zip', ['all', 'inline'], function () {
-  gulp.src(['dist/index.html', 'assets/proxy-images/**'])
+  gulp.src(['dist/index.html', 'proxy-images/**'])
     .pipe($.zip('Cover.zip'))
     .pipe(gulp.dest(''));
 });
