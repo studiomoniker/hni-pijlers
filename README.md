@@ -18,7 +18,7 @@
 To use this boilerplate, your machine needs to have Node.js and Gulp installed:
 
 - Install [Node.js](https://nodejs.org/en/download/)
-- In Terminal.app nstall Gulp: `npm install --global gulp`
+- In Terminal.app install Gulp: `npm install --global gulp`
 
 ## Boilerplate Installation
 
