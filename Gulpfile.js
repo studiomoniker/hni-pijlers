@@ -19,8 +19,6 @@ var banner = ['  <!--',
   '  -->'
   ].join('\n') + '\n';
 
-var production = false;
-
 // Run CSS through autoprefixed
 gulp.task('css', function () {
   return gulp.src('style/main.scss')
@@ -31,7 +29,7 @@ gulp.task('css', function () {
       console.log(err);
       $.notify.onError()(err.message);
       this.emit('end');
-      })
+    })
     .pipe($.autoprefixer({
       browsers: ['last 2 versions'],
       cascade: false
@@ -50,7 +48,7 @@ new function() {
   var envify = require('envify/custom');
 
   gulp.task('js', function () {
-    var files = glob.sync('./src/js/**/*.js');
+    var files = glob.sync('./src/**/*.js');
 
     return browserify({
       entries: files,
@@ -70,18 +68,18 @@ new function() {
       .pipe($.uglify())
       .pipe(gulp.dest('dist'));
   });
-}
+};
 
-gulp.task('html', function() {
+gulp.task('html', ['copy', 'js', 'css'], function() {
   return gulp.src('assets/index.html')
     .pipe($.header(banner, { pkg : require('./package.json') } ))
     .pipe(gulp.dest('dist/'))
     .pipe($.livereload());
-})
+});
 
 // Copy html and assets to dist
 gulp.task('copy', function () {
-  return gulp.src(['src/assets/**/**'], {base: 'src/'})
+  return gulp.src(['assets/**/**'], {base: 'assets/'})
     .pipe(gulp.dest('dist'));
 });
 
@@ -101,7 +99,6 @@ gulp.task('default', ['all', 'watch']);
 // Set-production
 gulp.task('set-production', function() {
   process.env.NODE_ENV = 'production';
-  production = true;
 });
 
 // Package
