@@ -1,0 +1,66 @@
+/* @license
+ * MyFonts Webfont Build ID 2661241, 2013-10-09T06:48:43-0400
+ *
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are
+ * explicitly restricted from using the Licensed Webfonts(s).
+ *
+ * You may obtain a valid license at the URLs below.
+ *
+ * Webfont: Helvetica Textbook Roman by Linotype
+ * URL: http://www.myfonts.com/fonts/linotype/helvetica/helveticatextbook-roman/
+ * Licensed pageviews: 2,000,000
+ *
+ * Webfont: Helvetica Textbook Oblique by Linotype
+ * URL: http://www.myfonts.com/fonts/linotype/helvetica/helveticatextbook-oblique/
+ * Licensed pageviews: 4,000,000
+ *
+ *
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2661241
+ * Webfonts copyright: Copyright &#x00A9; 2005 - 2008 Linotype GmbH, www.linotype.com. All rights reserved. This font software may not be reproduced, modified, disclosed or transferred without the express written approval of Linotype GmbH. Helvetica is a trademark of Linotype G
+ *
+ * © 2013 MyFonts Inc
+*/
+
+/* TODO: UNCOMMENT THIS LINK IF ROLLING OUT IN LIVE! */
+/*@import url("http://fast.fonts.net/t/1.css?apiType=css&projectid=9c40e6a5-b889-4a1c-b29f-f90d36f8a907");*/
+@font-face{
+	font-family:"HelveticaTextbookCom-Roman";
+	src:url("../fonts/11f9c8ce-1ff6-4ca7-ad2e-92c61bb5004c.eot");
+	src:url("../fonts/11f9c8ce-1ff6-4ca7-ad2e-92c61bb5004c.eot?#iefix") format("eot"),
+			url("../fonts/e5b89697-9108-43cd-9361-b666daecdf2d.woff") format("woff"),
+			url("../fonts/f2b0c607-4e09-49e4-86be-7f6b792be4e2.svg#f2b0c607-4e09-49e4-86be-7f6b792be4e2") format("svg");
+}
+/* italic */
+@font-face{
+	font-family:"HelveticaTextbookCom-Obl";
+	src:url("../fonts/09f47a70-9cba-4bd7-93bb-defa45693d5c.eot");
+	src:url("../fonts/09f47a70-9cba-4bd7-93bb-defa45693d5c.eot?#iefix") format("eot"),
+			url("../fonts/2e87438f-a86f-4908-9c51-b2bcd0f56327.woff") format("woff"),
+			url("../fonts/804464dc-2b2f-4bd2-9e49-6eb660d47848.svg#804464dc-2b2f-4bd2-9e49-6eb660d47848") format("svg");
+}
+/* bold */
+@font-face{
+	font-family:"HelveticaTextbookCom-Bold";
+	src:url("../fonts/a58fd361-3824-464b-8531-a57da00ffff1.eot");
+	src:url("../fonts/a58fd361-3824-464b-8531-a57da00ffff1.eot?#iefix") format("eot"),
+			url("../fonts/3700bb41-ad2b-4c08-b2e4-6db857cdee21.woff") format("woff"),
+			url("../fonts/8fc98974-aa84-4e30-8b48-a46b56172106.svg#8fc98974-aa84-4e30-8b48-a46b56172106") format("svg");
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 0) {
+	@font-face{
+		font-family:"HelveticaTextbookCom-Roman";
+		src: url("../fonts/f2b0c607-4e09-49e4-86be-7f6b792be4e2.svg#f2b0c607-4e09-49e4-86be-7f6b792be4e2") format("svg");
+	}
+	/* italic */
+	@font-face{
+		font-family:"HelveticaTextbookCom-Obl";
+		src: url("../fonts/804464dc-2b2f-4bd2-9e49-6eb660d47848.svg#804464dc-2b2f-4bd2-9e49-6eb660d47848") format("svg");
+	}
+	/* bold */
+	@font-face{
+		font-family:"HelveticaTextbookCom-Bold";
+		src: url("../fonts/8fc98974-aa84-4e30-8b48-a46b56172106.svg#8fc98974-aa84-4e30-8b48-a46b56172106") format("svg");
+	}
+}
