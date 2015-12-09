@@ -91,17 +91,14 @@
           if (msg.status !== undefined) {
             switch (msg.status) {
               case 'ready':
+                if (msg.coverId) return;
                 // If cover art is ready, a message is sent to the parent
                 // In that case the data having title and subtitle is sent to the cover
                 msg.coverId = 'hni-boilerplate-simple'
-
                 var cover_url = Drupal.settings.magazines[msg.coverId].cover_url;
-                if (/boilerplate/.test(cover_url)) {
-                  cover_url = 'http://localhost'
-                };
                 $.postMessage(
                   '{"title": "' + Drupal.settings.magazines[msg.coverId].title + '", "subtitle": "' + Drupal.settings.magazines[msg.coverId].subtitle + '", "domain_path": "' + 'link.html' + '"}',
-                  cover_url, // URL of cover art
+                  'http://'  + document.location.hostname,
                   $('iframe.' + msg.coverId).get(0).contentWindow
                 );
                 break;
