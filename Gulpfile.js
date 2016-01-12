@@ -54,7 +54,7 @@ new function() {
       entries: files,
       debug: true
     })
-      .transform(babelify)
+      .transform('babelify', {presets: ['es2015']})
       .transform(envify())
       .bundle()
       .on('error', function(err){
