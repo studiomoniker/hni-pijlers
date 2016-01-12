@@ -23,7 +23,8 @@
     "gulp-zip": "^3.0.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "envify": "^3.4.0"
+    "envify": "^3.4.0",
+    "babel-preset-es2015": "^6.3.13"
   },
   "dependencies": {
     "points": "git+https://vit-ruller@github.com/vit-ruller/Points.git"
