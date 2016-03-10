@@ -4,6 +4,7 @@ var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var inlinesource = require('gulp-inline-source');
 
+var projectName = require('./package.json').name;
 var banner = ['  <!--',
   '    ',
   '    ',
@@ -112,6 +113,6 @@ gulp.task('inline', ['js', 'html'], function() {
 
 gulp.task('zip', ['all', 'inline'], function () {
   gulp.src(['dist/index.html', 'proxy-images/**'])
-    .pipe($.zip('Cover.zip'))
+    .pipe($.zip('Cover-' + projectName + '.zip'))
     .pipe(gulp.dest(''));
 });
