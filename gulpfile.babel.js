@@ -47,6 +47,10 @@ gulp.task('package:webpack', (callback) => {
 gulp.task('webpack-dev-server', () => {
   // modify some webpack config options
   var myConfig = Object.create(webpackConfig);
+
+  // Inline support for live reloading:
+  myConfig.entry.unshift('webpack-dev-server/client?http://localhost:8080/');
+
   myConfig.devtool = 'eval';
   myConfig.debug = true;
 
@@ -64,7 +68,7 @@ gulp.task('webpack-dev-server', () => {
     }
     gutil.log(
       '[webpack-dev-server]',
-      'http://localhost:8080/webpack-dev-server/dist/'
+      'http://localhost:8080/dist/'
     );
   });
 });

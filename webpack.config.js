@@ -12,8 +12,7 @@ module.exports = {
    entry  : ['./src/app.js', './style/main.scss', './assets/index.html'],
    output : {
       path    : __dirname + '/dist',
-      filename : 'main.js',
-      publicPath: 'dist/'
+      filename : 'main.js'
    },
    module : {
       loaders: [
