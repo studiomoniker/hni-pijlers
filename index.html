@@ -1,10 +1,13 @@
+
+<%= htmlWebpackPlugin.options.header %>
+
 <!DOCTYPE html>
 <html>
 <head>
+  <title><%= htmlWebpackPlugin.options.title %></title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-  <link rel="stylesheet" inline href="main.css">
-  <title>HNI</title>
+<link href="main.css" rel="stylesheet" inline>
 </head>
 <body>
 <div style="padding:2em;text-align:center">
@@ -13,5 +16,6 @@
 <p id="text"></p>
 </div>
 </body>
-<script type="text/javascript" inline src="main.js"></script>
+<script src="main.js" inline></script>
+</body>
 </html>

@@ -6,31 +6,19 @@ import inlinesource from 'gulp-inline-source';
 import gutil from 'gulp-util';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
-import webpackConfig from './webpack.config.js';
-import { name } from './package.json';
+import webpackConfig from './webpack.config.babel.js';
+import saveLicense from 'uglify-save-license';
 
 const $ = loadPlugins();
-const banner = `  <!--
-    
-    
-    <%= pkg.name %> - <%= pkg.description %>
-    
-    version <%= pkg.version %>
-    
-    with love from Moniker
-    
-    studiomoniker.com – @studiomoniker.com – github.com/studiomoniker
-    
-    
-  -->`;
-
 
 gulp.task('package:webpack', (callback) => {
   // modify some webpack config options
   var myConfig = Object.create(webpackConfig);
   myConfig.plugins = myConfig.plugins.concat(
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin({
+        comments: saveLicense
+    })
   );
 
   // run webpack
@@ -51,7 +39,7 @@ gulp.task('webpack-dev-server', () => {
   // Inline support for live reloading:
   myConfig.entry.unshift('webpack-dev-server/client?http://localhost:8080/');
 
-  myConfig.devtool = 'eval';
+  myConfig.devtool = 'source-map';
   myConfig.debug = true;
 
   // Start a webpack-dev-server
@@ -68,19 +56,10 @@ gulp.task('webpack-dev-server', () => {
     }
     gutil.log(
       '[webpack-dev-server]',
-      'http://localhost:8080/dist/'
+      'http://localhost:8080/webpack-dev-server/dist/'
     );
   });
 });
-
-gulp.task('package:html',
-  [ 'package:webpack' ],
-  () => {
-    return gulp.src('dist/index.html')
-      .pipe($.header(banner, { pkg : require('./package.json') } ))
-      .pipe(gulp.dest('dist/'));
-  }
-);
 
 // Set-production
 gulp.task('set-production',
@@ -89,12 +68,13 @@ gulp.task('set-production',
 
 gulp.task('package:inline',
   [
-    'package:webpack',
-    'package:html'
+    'package:webpack'
   ],
   () => {
     return gulp.src('dist/index.html')
-      .pipe(inlinesource())
+      .pipe(inlinesource({
+        compress: false // Leave compressing to webpack
+      }))
       .pipe(gulp.dest('dist'));
   }
 );
@@ -106,7 +86,7 @@ gulp.task('package:zip',
   ],
   () => {
     gulp.src(['dist/index.html', 'proxy-images/**'])
-      .pipe($.zip('Cover-' + name + '.zip'))
+      .pipe($.zip(`Cover-${require('./package.json').name}.zip`))
       .pipe(gulp.dest(''));
   }
 );
@@ -116,7 +96,6 @@ gulp.task('package',
     'set-production',
     'package:webpack',
     'package:inline',
-    'package:html',
     'package:zip'
   ]
 );
