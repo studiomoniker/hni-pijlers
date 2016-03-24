@@ -36,6 +36,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "dependencies": {
-    "points": "git+https://vit-ruller@github.com/vit-ruller/Points.git"
+    "d3-voronoi": "^0.3.2",
+    "points": "git+https://vit-ruller@github.com/vit-ruller/Points.git",
+    "yo-yo": "^1.1.1"
   }
 }

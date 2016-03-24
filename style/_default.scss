@@ -8,3 +8,20 @@ html, body{
   height: 100%;
   width: 100%;
 }
+
+line {
+  stroke: black;
+  stroke-width: 10px;
+}
+
+div {
+  position: fixed;
+}
+
+svg {
+  position: absolute;
+  top: 0;
+  left: 9;
+  width: 100vw;
+  height: 100vh;
+}
