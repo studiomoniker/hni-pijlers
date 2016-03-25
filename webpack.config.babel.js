@@ -49,7 +49,7 @@ module.exports = {
            test  : /.js$/,
            loader : 'babel-loader',
            query: {
-            presets: ['es2015']
+            presets: ['es2015', 'react']
            }
         },
         {
@@ -76,14 +76,6 @@ module.exports = {
       ];
    },
    plugins: [
-       new webpack.DefinePlugin({
-        'process.env': Object
-          .keys(process.env)
-          .reduce(function(o, k) {
-            o[k] = JSON.stringify(process.env[k]);
-            return o;
-          }, {})
-        }),
       extractCss,
       new CopyWebpackPlugin(
         [

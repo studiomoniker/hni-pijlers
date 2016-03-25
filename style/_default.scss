@@ -9,7 +9,7 @@ html, body{
   width: 100%;
 }
 
-line {
+path {
   stroke: black;
   stroke-width: 10px;
 }
@@ -24,4 +24,8 @@ svg {
   left: 9;
   width: 100vw;
   height: 100vh;
+}
+
+circle {
+  transition: transform 1s;
 }
