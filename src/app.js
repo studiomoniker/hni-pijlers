@@ -2,12 +2,9 @@
 import voronoi from 'd3-voronoi';
 import Flock from './lib/flock';
 import loop from './lib/rafLoop';
-import Point from './lib/point';
+import drawLinks from './lib/drawLinks';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import classNames from 'classnames';
-
+let width, height, flock, containerEl;
 const v = voronoi.voronoi();
 const concepts = [
   {
@@ -35,136 +32,53 @@ const concepts = [
     work: true
   }
 ];
+initialize();
 
-let width = window.innerWidth;
-let height = window.innerHeight;
-let flock = new Flock(10, [width, height], concepts);
+function initialize() {
+  containerEl = document.createElement('div');
+  containerEl.className = 'container';
+  document.body.appendChild(containerEl);
 
-window.addEventListener('resize', function() {
+  onResize();
+  window.addEventListener('resize', onResize);
+
+  flock.boids.forEach(boid => {
+    const el = document.createElement('div');
+    el.innerHTML = boid.name;
+    el.className = 'title' + (boid.type ? ' work' : '' );
+    containerEl.appendChild(el);
+    boid.el = el;
+  });
+
+  loop.add(tick);
+}
+
+function tick() {
+  flock.tick();
+
+  const links = v(flock.boids.map(boid => boid.position.toArray()))
+    .edges
+    .filter(edge => edge.right)
+    .map(edge => [flock.boids[edge.left.index], flock.boids[edge.right.index]])
+    .filter(([a, b]) => {
+      const dis = a.averagePosition.distanceSq(b.averagePosition);
+      return a.name !== b.name
+        && dis < (height * 80)
+        && dis > 10000;
+    });
+  drawLinks(links);
+
+  flock.boids.forEach(boid => {
+    const point = boid.averagePosition;
+    boid.el.style.transform = `translate3d(calc(${point.x}px - 50%), calc(${point.y}px - 50%), 0)`;
+  });
+}
+
+function onResize() {
   width = window.innerWidth;
   height = window.innerHeight;
+  var oldBoids = flock && flock.boids;
   flock = new Flock(10, [width, height], concepts);
-});
-
-function shorten([point1, point2]) {
-  const p1 = point1.clone();
-  const p2 = point2.clone();
-  const padding = 50;
-  const delta = p2
-    .clone()
-    .subtract(p1)
-    .normalize(padding);
-  p1.add(delta);
-  p2.subtract(delta);
-  return [p1, p2];
+  if (oldBoids)
+    oldBoids.map((boid, index) => flock.boids[index].el = boid.el);
 }
-
-class Link extends React.Component {
-  shouldComponentUpdate() {
-    return true;
-  }
-
-  render() {
-    return <path
-      key={'a' + this.props.key}
-      className={this.props.className}
-      d={`M ${shorten(this.props.points).map(p => [p.x, p.y]).join(' L ')}`} />
-  }
-}
-
-class Title extends React.Component {
-  shouldComponentUpdate() {
-    return false;
-  }
-
-  render() {
-    const { index, point, className } = this.props;
-    let cName = 'title';
-    if (cName)
-      cName += ' ' + className;
-    return <div className={cName} style={{transform: `translate(-50%, -50%)`}} >{this.props.children}</div>
-  }
-}
-
-class Transform extends React.Component {
-  shouldComponentUpdate() {
-    return true;
-  }
-
-  render() {
-    const { point } = this.props;
-    return <div style={{transform: `translate(${point.x}px, ${point.y}px)`}} >{this.props.children}</div>
-  }
-}
-
-
-class Drawing extends React.Component {
-  constructor() {
-    super();
-    this.state = { boids: [] };
-    loop.add(() => {
-      flock.tick(this.state.mouse);
-      this.setState({
-        boids: flock.boids
-      });
-    });
-  }
-
-  onMouseMove(event) {
-    this.setState({
-      mouse: new Point(event.clientX, event.clientY)
-    });
-  }
-
-  render() {
-    const { boids } = this.state;
-    const links = v(boids.map(boid => [boid.averagePosition.x, boid.averagePosition.y])).edges
-      .filter(edge => edge.right)
-      .map(edge => [edge.left.index, edge.right.index]);
-    return <div>
-      <svg onMouseMove={this.onMouseMove.bind(this)}>
-        {
-          links
-          .map(link => {
-            return link.map(index => boids[index]);
-          })
-          .filter(([a, b]) => {
-            const dis = a.averagePosition.distanceSq(b.averagePosition);
-            return a.name !== b.name
-              && dis < (height * 80)
-              && dis > 10000;
-          })
-          .map((link, index) => {
-            const a = link[0];
-            const b = link[1];
-            var linkClass = classNames({
-              connected: a.type !== b.type,
-              same: a === b
-            });
-            return <Link key={index} points={link.map(boid => boid.averagePosition)} className={linkClass} />
-          })
-        }
-      </svg>
-      <div style={{zIndex: 2}}>
-      { boids.map((boid, index) => {
-        let className = '';
-        if (boid.type)
-          className = 'work';
-        return <Transform key={index} point={boid.averagePosition} index={index} >
-            <Title key={index} className={className}>{boid.name}</Title>
-          </Transform>
-        })
-      }
-      </div>
-
-    </div>;
-  }
-}
-
-let el = document.querySelector('.container');
-function render() {
-  ReactDOM.render(<Drawing />, el);
-}
-
-render();
-

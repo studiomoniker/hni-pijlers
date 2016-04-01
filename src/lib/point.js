@@ -27,7 +27,7 @@ function Point (x, y) {
    *
    * @api public
    */
-  this.x = x || 0;
+  this.x = x || 0.0;
 
   /**
    * The Y coordinate
@@ -40,112 +40,8 @@ function Point (x, y) {
    *
    * @api public
    */
-  this.y = y || 0;
+  this.y = y || 0.0;
 };
-
-/**
- * # Static
- */
-
-/**
- * Creates a new instance from an array
- *
- * ### Examples:
- *     var point = Point.fromArray([42, 21]);
- *
- *     point.toString();
- *     // => x:42, y:21
- *
- * @name Point.fromArray
- * @param {Array} array Array with the x and y coordinates at index 0 and 1 respectively
- * @return {Point} The new instance
- * @api public
- */
-Point.fromArray = function(arr) {
-  return new Point(
-    arr[0] || 0,
-    arr[1] || 0
-  );
-},
-
-/**
- * Creates a new instance from an object
- *
- * ### Examples:
- *     var point = Point.fromObject({ x: 42, y: 21 });
- *
- *     point.toString();
- *     // => x:42, y:21
- *
- * @name Point.fromObject
- * @param {Object} obj Object with the values for x and y
- * @return {Point} The new instance
- * @api public
- */
-Point.fromObject = function(obj) {
-  return new Point(
-    obj.x || 0,
-    obj.y || 0
-  );
-},
-
-/**
- * Creates a new instance with random x and y coordinates between 0 and 1,
- *
- * ### Examples:
- *     var randomVector = Point.random();
- *
- *     point.toString();
- *     // => x:0.0273982 y: 0.9784389
- *
- * @name Point.random
- * @return {Point} The new instance
- * @api public
- */
-Point.random = function() {
-  return new Point(
-    Math.random(),
-    Math.random()
-  );
-},
-
-/**
- * Returns a new point object with the smallest x and y of the
- * supplied points.
- *
- * @static
- * @param {Point} point1
- * @param {Point} point2
-  *
- * @name Point.min
- * @return {Point} The new instance
- * @api public
- */
-Point.min = function(point1, point2) {
-  return new Point(
-    Math.min(point1.x, point2.x),
-    Math.min(point1.y, point2.y)
-  );
-}
-
-/**
- * Returns a new point object with the largest x and y of the
- * supplied points.
- *
- * @static
- * @param {Point} point1
- * @param {Point} point2
-  *
- * @name Point.max
- * @return {Point} The new instance
- * @api public
- */
-Point.max = function(point1, point2) {
-  return new Point(
-    Math.max(point1.x, point2.x),
-    Math.max(point1.y, point2.y)
-  );
-}
 
 /**
  * # Manipulation
@@ -787,9 +683,9 @@ Point.prototype = {
    * ### Examples:
    *     var point1 = new Point(10, 10);
    *     var point = new Point(20, 20);
-   *     var point = point1.copy(point1);
+   *     point1.copy(point);
    *
-   *     point.toString();
+   *     point1.toString();
    *     // => x:20, y:20
    *
    * @return {Point} `this` for chaining capabilities
@@ -799,6 +695,24 @@ Point.prototype = {
     this.x = point.x;
     this.y = point.y;
     return this;
+  },
+
+  /**
+   * Returns the vector from this point to the supplied point
+   *
+   * ### Examples:
+   *     var point = new Point(10, 10);
+   *     var point1 = new Point(15, 15);
+   *     var vector = point.vector(point1);
+   *
+   *     vector.toString();
+   *     // => x:5, y:5
+   *
+   * @return {Point} The vector
+   * @api public
+   */
+  vector: function(point) {
+    return point.clone().subtract(this);
   },
 
   /**
@@ -829,7 +743,7 @@ Point.prototype = {
    *     // => 23000
    *
    * @param {Point} vector The second vector
-   * @return {Number} the dor product of the two points
+   * @return {Number} the dot product of the two points
    * @api public
    */
   dot: function(point) {
@@ -1074,12 +988,18 @@ Point.prototype = {
    * @return {Point} `this` for chaining capabilities
    */
   limitLength: function(length) {
-    var thisLength = this.length();
-    if (thisLength > length) {
-      var scale = length / thisLength;
+    var len = this.length();
+    if (len > length) {
+      var scale = length / len;
       this.x = this.x * scale;
       this.y = this.y * scale;
     }
+    return this;
+  },
+
+  inverse: function() {
+    this.x = 1.0 / this.x;
+    this.y = 1.0 / this.y;
     return this;
   },
 
@@ -1205,6 +1125,113 @@ Point.prototype = {
 
 Point.prototype.horizontalAngle = Point.prototype.angle;
 Point.prototype.horizontalAngleDeg = Point.prototype.angleDeg;
+
+/**
+ * # Static
+ */
+
+/**
+ * Creates a new instance from an array
+ *
+ * ### Examples:
+ *     var point = Point.fromArray([42, 21]);
+ *
+ *     point.toString();
+ *     // => x:42, y:21
+ *
+ * @name Point.fromArray
+ * @param {Array} array Array with the x and y coordinates at index 0 and 1 respectively
+ * @return {Point} The new instance
+ * @api public
+ */
+Point.fromArray = function(arr) {
+  return new Point(
+    arr[0] || 0,
+    arr[1] || 0
+  );
+}
+
+/**
+ * Creates a new instance from an object
+ *
+ * ### Examples:
+ *     var point = Point.fromObject({ x: 42, y: 21 });
+ *
+ *     point.toString();
+ *     // => x:42, y:21
+ *
+ * @name Point.fromObject
+ * @param {Object} obj Object with the values for x and y
+ * @return {Point} The new instance
+ * @api public
+ */
+Point.fromObject = function(obj) {
+  return new Point(
+    obj.x || 0,
+    obj.y || 0
+  );
+}
+
+/**
+ * Generates a random vector with the given scale
+ *
+ * ### Examples:
+ *     var randomVector = Point.random();
+ *
+ *     point.toString();
+ *     // => x:0.0273982 y: 0.9784389
+ *
+ * @name Point.random
+ * @param scale Length of the resulting vector. If ommitted, a unit vector will be returned
+ * @return {Point} The new instance
+ * @api public
+ */
+Point.random = function(scale) {
+  scale = scale || 1.0;
+  var r = Math.random() * 2.0 * Math.PI;
+  return new Point(
+    Math.cos(r) * scale,
+    Math.sin(r) * scale
+  );
+};
+
+/**
+ * Returns a new point object with the smallest x and y of the
+ * supplied points.
+ *
+ * @static
+ * @param {Point} point1
+ * @param {Point} point2
+  *
+ * @name Point.min
+ * @return {Point} The new instance
+ * @api public
+ */
+Point.min = function(point1, point2) {
+  return new Point(
+    Math.min(point1.x, point2.x),
+    Math.min(point1.y, point2.y)
+  );
+}
+
+/**
+ * Returns a new point object with the largest x and y of the
+ * supplied points.
+ *
+ * @static
+ * @param {Point} point1
+ * @param {Point} point2
+  *
+ * @name Point.max
+ * @return {Point} The new instance
+ * @api public
+ */
+Point.max = function(point1, point2) {
+  return new Point(
+    Math.max(point1.x, point2.x),
+    Math.max(point1.y, point2.y)
+  );
+}
 
 var degrees = 180 / Math.PI;
 

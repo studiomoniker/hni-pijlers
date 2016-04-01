@@ -3,7 +3,6 @@ import CopyWebpackPlugin from 'copy-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import autoprefixer from 'autoprefixer';
 import precss from 'precss';
-import webpack from 'webpack';
 import { execFileSync } from 'child_process';
 import packageInfo from './package.json';
 
@@ -49,7 +48,7 @@ module.exports = {
            test  : /.js$/,
            loader : 'babel-loader',
            query: {
-            presets: ['es2015', 'react']
+            presets: ['es2015']
            }
         },
         {

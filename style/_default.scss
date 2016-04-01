@@ -11,15 +11,6 @@ html, body{
   line-height: 1.18em;
 }
 
-path {
-  stroke: black;
-  stroke-width: 1px;
-}
-
-div {
-  position: fixed;
-}
-
 @font-face {
   font-family: "fontfont";
   src:  url("../assets/fontfont.woff") format("woff");
@@ -29,73 +20,25 @@ div {
 
 @font-face {
   font-family: "fontitalic";
-  src:  url("../assets/fontitalic.woff") format("woff");
+  src: url("../assets/fontitalic.woff") format("woff");
   font-style: normal;
   font-weight: normal;
 }
 
-svg, .canvas {
-  position: absolute;
-  top: 0;
-  left: 9;
-  width: 100vw;
-  height: 100vh;
-}
-
 .title {
   position: absolute;
-  top: 0;
   cursor: pointer;
   text-align: center;
-  font-family: inherit;
   border-bottom: 1px solid black;
   padding-bottom: 1px;
-  padding-right: 0;
-  padding-left: 0;
   &:hover {
     padding-right: 0.2em;
     padding-left: 0.2em;
     border: 1px solid black;
   }
-  z-index: 2;
   &.work {
     border-bottom: inherit;
     font-family: "fontitalic";
-    z-index: 1;
-    &:hover {
-      text-decoration: inherit;
-      border-bottom: solid black 1px;
-    }
-  }
-}
-
-.connected {
-  stroke-width: 10px;
-}
-
-.same {
-  display: none
-}
-
-.caption {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 2em;
-}
-
-.caption-title {
-  border-bottom: 1px solid black;
-  padding-bottom: 1px;
-  padding-right: 0;
-  padding-left: 0;
-  &:hover {
-    cursor: pointer;
-  }
-  &.work {
-    border-bottom: inherit;
-    font-family: "fontitalic";
-    z-index: 1;
     &:hover {
       text-decoration: inherit;
       border-bottom: solid black 1px;
