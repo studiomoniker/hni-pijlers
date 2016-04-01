@@ -1,138 +1,162 @@
 // import './lib/message';
 import voronoi from 'd3-voronoi';
-import Boids from './lib/boids';
+import Flock from './lib/flock';
 import loop from './lib/rafLoop';
+import Point from './lib/point';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import classNames from 'classnames';
 
 const v = voronoi.voronoi();
+const concepts = [
+  {
+    name: 'R&D'
+  },
+  {
+    name: 'Museum'
+  },
+   {
+    name: 'Agentschap'
+  },
+   {
+    name: 'Rijksarchief'
+  },
+  {
+    name: 'digitale\ncultuur',
+    work: true
+  },
+  {
+    name: 'design',
+    work: true
+  },
+  {
+    name: 'architectuur',
+    work: true
+  }
+];
 
-const width = window.innerWidth;
-const height = window.innerHeight;
-const borders = [[0, 0], [0, height], [width, height], [width, 0]];
-const points = [];
-for (var x = 0; x < 6; x++) {
-  points.push([Math.random() * width, Math.random() * height]);
-}
+let width = window.innerWidth;
+let height = window.innerHeight;
+let flock = new Flock(10, [width, height], concepts);
 
-const flock = new Boids({
-  boids: points,          // The amount of boids to use 
-  speedLimit: 2,        // Max steps to take per tick 
-  accelerationLimit: 1,   // Max acceleration per tick 
-  separationDistance: 100, // Radius at which boids avoid others 
-  alignmentDistance: 180, // Radius at which boids align with others 
-  choesionDistance: 10,  // Radius at which boids approach others 
-  separationForce: 0.15,  // Speed to avoid at 
-  alignmentForce: 0.25,   // Speed to align with other boids 
-  choesionForce: 0.1,     // Speed to move towards other boids 
-  attractors: [],
-  size: [width, height]
+window.addEventListener('resize', function() {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  flock = new Flock(10, [width, height], concepts);
 });
 
-function shorten(point1, point2) {
-  const length = [
-    point2[0] - point1[0],
-    point2[1] - point1[1]
-  ];
-  return [
-    [
-      point1[0] + length[0] * 0.2,
-      point1[1] + length[1] * 0.2
-    ],
-    [
-      point2[0] - length[0] * 0.2,
-      point2[1] - length[1] * 0.2
-    ]
-  ];
+function shorten([point1, point2]) {
+  const p1 = point1.clone();
+  const p2 = point2.clone();
+  const padding = 50;
+  const delta = p2
+    .clone()
+    .subtract(p1)
+    .normalize(padding);
+  p1.add(delta);
+  p2.subtract(delta);
+  return [p1, p2];
 }
 
-class Path extends React.Component {
+class Link extends React.Component {
+  shouldComponentUpdate() {
+    return true;
+  }
+
   render() {
-    return <path d={`M ${this.props.points.join(' L ')}`} />
+    return <path
+      key={'a' + this.props.key}
+      className={this.props.className}
+      d={`M ${shorten(this.props.points).map(p => [p.x, p.y]).join(' L ')}`} />
   }
 }
 
-class Triangle extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    const { points } = this.props;
-    for (let i = 0, l = 3; i < l; i++) {
-      const point = points[i];
-      const nextPoint = nextProps.points[i];
-      if (point[0] !== nextPoint[0] || point[1] !== nextPoint[1])
-        return true;
-    }
+class Title extends React.Component {
+  shouldComponentUpdate() {
     return false;
   }
 
   render() {
-    const { points } = this.props;
-    return <g>
-      {
-        points.map(
-          (point, index) => {
-            let nextPoint = points[(index + 1) % 3];
-            return <Path key={index} points={shorten(point, nextPoint)} />;
-          }
-        )
-      }
-    </g>
+    const { index, point, className } = this.props;
+    let cName = 'title';
+    if (cName)
+      cName += ' ' + className;
+    return <div className={cName} style={{transform: `translate(-50%, -50%)`}} >{this.props.children}</div>
   }
 }
 
-class Flock extends React.Component {
+class Transform extends React.Component {
+  shouldComponentUpdate() {
+    return true;
+  }
+
   render() {
-    return <g>
-      {this.props.points.map((boid, index) => <circle key={index} transform={`translate(${boid})`} cx="0" cy="0" r="2" fill="black" />)}
-    </g>
+    const { point } = this.props;
+    return <div style={{transform: `translate(${point.x}px, ${point.y}px)`}} >{this.props.children}</div>
   }
 }
+
 
 class Drawing extends React.Component {
   constructor() {
     super();
-    const points = [];
-    for (var x = 0; x < 6; x++) {
-      for (var y = 0; y < 6; y++) {
-        points.push([x / 5 * width, y / 5 * height]);
-      }
-    }
-
-    this.state = { points };
+    this.state = { boids: [] };
     loop.add(() => {
-      flock.tick();
+      flock.tick(this.state.mouse);
       this.setState({
-        points: flock.boids.map((boid) => [boid[0], boid[1]])
+        boids: flock.boids
       });
     });
   }
 
   onMouseMove(event) {
-    let points = this.state.points.slice(0);
-    points[0] = [event.clientX, event.clientY];
     this.setState({
-      points
+      mouse: new Point(event.clientX, event.clientY)
     });
   }
 
   render() {
-    const { points } = this.state;
-    const triangles = v.triangles(points.concat(borders))
-      .filter((points) => {
-        for (var i = 0; i < 3; i++) {
-          let [x, y] = points[i];
-          if (x === 0 || x === width || y === 0 || y === height)
-            return false;
-        }
-        return true;
-      });
+    const { boids } = this.state;
+    const links = v(boids.map(boid => [boid.averagePosition.x, boid.averagePosition.y])).edges
+      .filter(edge => edge.right)
+      .map(edge => [edge.left.index, edge.right.index]);
     return <div>
       <svg onMouseMove={this.onMouseMove.bind(this)}>
-        <Flock points={points} />
         {
-          triangles.map((points, index) => <Triangle key={index} points={points} />)
+          links
+          .map(link => {
+            return link.map(index => boids[index]);
+          })
+          .filter(([a, b]) => {
+            const dis = a.averagePosition.distanceSq(b.averagePosition);
+            return a.name !== b.name
+              && dis < (height * 80)
+              && dis > 10000;
+          })
+          .map((link, index) => {
+            const a = link[0];
+            const b = link[1];
+            var linkClass = classNames({
+              connected: a.type !== b.type,
+              same: a === b
+            });
+            return <Link key={index} points={link.map(boid => boid.averagePosition)} className={linkClass} />
+          })
         }
       </svg>
+      <div style={{zIndex: 2}}>
+      { boids.map((boid, index) => {
+        let className = '';
+        if (boid.type)
+          className = 'work';
+        return <Transform key={index} point={boid.averagePosition} index={index} >
+            <Title key={index} className={className}>{boid.name}</Title>
+          </Transform>
+        })
+      }
+      </div>
+
     </div>;
   }
 }
