@@ -20,7 +20,7 @@ const concepts = [
     name: 'Rijksarchief'
   },
   {
-    name: 'digitale\ncultuur',
+    name: 'digitale<br/>cultuur',
     work: true
   },
   {
