@@ -18,7 +18,6 @@ function loop() {
   functions.forEach(func => func());
   if (running)
     window.requestAnimationFrame(loop);
-  return rafLoop;
 }
 
 function add(func) {
