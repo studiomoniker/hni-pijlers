@@ -1,32 +1,6 @@
 import Point from './point';
 import Boid from './boid';
-
-const types = [
-  {
-    name: 'R&D'
-  },
-  {
-    name: 'Museum'
-  },
-   {
-    name: 'Agentschap'
-  },
-   {
-    name: 'Rijksarchief'
-  },
-  {
-    name: 'digitale<br/>cultuur',
-    work: true
-  },
-  {
-    name: 'design',
-    work: true
-  },
-  {
-    name: 'architectuur',
-    work: true
-  }
-];
+import types from './pijlers';
 
 const margin = 30;
 export default class Flock {
@@ -51,6 +25,7 @@ export default class Flock {
        });
        boid.type = kind.work;
        boid.name = kind.name;
+       boid.url = kind.url;
        this.boids.push(boid);
     }
     for (let i = 0; i < 6; i++) {

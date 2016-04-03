@@ -1,6 +1,6 @@
-import './lib/message';
 import 'points';
 
+import { redirect } from './lib/message';
 import Flock from './lib/flock';
 import loop from './lib/rafLoop';
 import drawLinks from './lib/drawLinks';
@@ -16,10 +16,13 @@ function initialize() {
   onResize();
   window.addEventListener('resize', onResize);
 
-  elements = flock.boids.map(boid => {
+  elements = flock.boids.map((boid, index) => {
     const el = document.createElement('div');
     el.innerHTML = boid.name;
     el.className = 'title' + (boid.type ? ' work' : '' );
+    el.addEventListener('pointerdown', () => redirect(flock.boids[index].url));
+    el.addEventListener('pointerenter', () => flock.boids[index].velocity.multiplyNum(0.3));
+    el.addEventListener('pointerleave', () => flock.boids[index].velocity.divideNum(0.3));
     containerEl.appendChild(el);
     return el;
   });
