@@ -1,4 +1,4 @@
-import Point from './point';
+import Point from '@studiomoniker/point';
 
 var count = 0;
 export default class Boid {

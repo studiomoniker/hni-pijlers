@@ -1,4 +1,4 @@
-import Point from './point';
+import Point from '@studiomoniker/point';
 import Boid from './boid';
 import types from './pijlers';
 
