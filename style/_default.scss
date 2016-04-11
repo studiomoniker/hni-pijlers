@@ -1,5 +1,5 @@
 body {
-  font-family: "fontfont", Helvetica, Arial, sans-serif;
+  font-family: "HelveticaTextbookCom-Roman", Helvetica, Arial, sans-serif;
   font-size: 16px;
 }
 
@@ -9,28 +9,31 @@ html, body{
   height: 100%;
   width: 100%;
   line-height: 1.18em;
+  background: white;
 }
 
 @font-face {
-  font-family: "fontfont";
-  src:  url("../assets/fontfont.woff") format("woff");
+  font-family: "HelveticaTextbookCom-Roman";
+  src:  url("/profiles/hni/themes/magazines/fonts/e5b89697-9108-43cd-9361-b666daecdf2d.woff") format("woff");
   font-style: normal;
   font-weight: normal;
 }
 
 @font-face {
-  font-family: "fontitalic";
-  src: url("../assets/fontitalic.woff") format("woff");
+  font-family: "HelveticaTextbookCom-Italic";
+  src: url("/profiles/hni/themes/magazines/fonts/2e87438f-a86f-4908-9c51-b2bcd0f56327.woff") format("woff");
   font-style: normal;
   font-weight: normal;
 }
 
 .title {
+  will-change: transform;
   position: absolute;
   cursor: pointer;
   text-align: center;
   border-bottom: 1px solid black;
   padding-bottom: 1px;
+  transform: translate(-1000px, -1000px);
   &:hover {
     padding-right: 0.2em;
     padding-left: 0.2em;
@@ -38,10 +41,14 @@ html, body{
   }
   &.work {
     border-bottom: inherit;
-    font-family: "fontitalic";
+    font-family: "HelveticaTextbookCom-Italic";
     &:hover {
       text-decoration: inherit;
       border-bottom: solid black 1px;
     }
   }
+}
+
+.hidden {
+  visibility: hidden;
 }

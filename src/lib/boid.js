@@ -1,20 +1,17 @@
 import Point from '@studiomoniker/point';
 
-var count = 0;
 export default class Boid {
-  constructor ({ position, maxSpeed, maxForce, radius, mass, wallMargin }) {
+  constructor ({ position, maxSpeed, maxForce, radius, wallMargin }) {
     this.acceleration = new Point();
-    this.velocity = Point.random();
+    this.velocity = Point.randomVector();
     this.position = position.clone();
     this.averagePosition = position.clone();
     this.radius = radius;
     this.maxSpeed = maxSpeed;
     this.maxSpeedSq = maxSpeed * maxSpeed;
     this.maxForce = maxForce;
-    this.desiredSeperation = 100;
-    this.mass = mass || 1.0;
+    this.desiredSeperation = 100 * 100;
     this.wallMargin = wallMargin || 0;
-    this.id = count++;
   }
 
   tick(boids, size) {
@@ -42,8 +39,7 @@ export default class Boid {
   update() {
     // Update velocity
     this.acceleration
-      .limitLength(this.maxForce)
-      .divideNum(this.mass);
+      .limitLength(this.maxForce);
     this.velocity
       .add(this.acceleration)
       .limitLength(this.maxSpeed);
@@ -54,7 +50,7 @@ export default class Boid {
   }
 
   predictVectorTo(boid) {
-    var lookAheadTime = this.position.distanceSq(boid.position) / this.maxSpeedSq;
+    var lookAheadTime = this.position.getDistanceSquared(boid.position) / this.maxSpeedSq;
 
     return boid.velocity.clone()
       .multiplyNum(lookAheadTime);
@@ -73,7 +69,7 @@ export default class Boid {
   }
 
   flee(target) {
-    const vector = this.seekVector(target).invert();
+    const vector = this.seekVector(target).inverse();
     this.acceleration.add(vector);
   }
 
@@ -84,7 +80,6 @@ export default class Boid {
 
   bounceBorder(size) {
     const position = this.position;
-    const titleMargin = 30;
     const radius = this.radius;
     if (position.x < radius + this.wallMargin)
       this.velocity.addX(1);
@@ -97,7 +92,7 @@ export default class Boid {
   }
 
   seekVector(target) {
-    return this.position.vector(target)
+    return this.position.getVector(target)
       .normalize(this.maxSpeed)
       .subtract(this.velocity)
       .limitLength(this.maxForce);
@@ -108,7 +103,7 @@ export default class Boid {
   // the target
   steerVector(target, slowdown) {
     const desired = this.position.vector(target);
-    const distance = desired.length();
+    const distance = desired.length;
     // Two options for desired vector magnitude
     // (1 -- based on distance, 2 -- maxSpeed)
 
@@ -125,6 +120,10 @@ export default class Boid {
       .limitLength(this.maxForce); // Limit to maximum steering force
   }
 
+  isSame(boid) {
+    return this.name === boid.name && this.maxForce > boid.maxForce;
+  }
+
   // Checks for nearby boids and steers away
   separationVector(boids) {
     let sum = new Point();
@@ -134,12 +133,16 @@ export default class Boid {
     for (let i = 0, l = boids.length; i < l; i++) {
       const other = boids[i];
       vector.copy(this.position).subtract(other.position);
-      let distance = vector.length();
+      let distance = vector.getLengthSquared();
+      let same = this.isSame(other);
+      if (same && distance < this.desiredSeperation * 2) {
+        this.evadeBoid(other);
       // If the distance is greater than 0 and less than an arbitrary amount
       // (0 when you are yourself)
-      if (distance > 0 && distance < this.desiredSeperation) {
+ 
+      } else if (distance > 0 && distance < this.desiredSeperation) {
         // Calculate vector pointing away from neighbor
-        sum.add(vector.normalize(1 / distance));
+        sum.add(vector.normalize());
         count++;
       }
     }
@@ -149,8 +152,7 @@ export default class Boid {
     if (!sum.isZero()) {
       // Implement Reynolds: Steering = Desired - Velocity
       sum
-        .normalize()
-        .multiplyNum(this.maxSpeed)
+        .normalize(this.maxSpeed)
         .subtract(this.velocity)
         .limitLength(this.maxForce);
     }
@@ -163,10 +165,9 @@ export default class Boid {
     let sum = new Point();
     let count = 0;
     for (let i = 0, l = boids.length; i < l; i++) {
-      const neighborDist = 100 * 100;
       const other = boids[i];
-      let distance = this.position.distanceSq(other.position);
-      if (distance > 0 && distance < neighborDist) {
+      let distance = this.position.getDistanceSquared(other.position);
+      if (distance > 0 && distance < this.desiredSeperation) {
         sum.add(other.velocity);
         count++;
       }
@@ -191,10 +192,9 @@ export default class Boid {
     let sum = new Point();
     let count = 0;
     for (let i = 0, l = boids.length; i < l; i++) {
-      let neighborDist = 100 * 100;
       const other = boids[i];
-      const distance = this.position.distanceSq(other.position);
-      if (distance > 0 && distance < neighborDist) {
+      const distance = this.position.getDistanceSquared(other.position);
+      if (other !== this && distance < this.desiredSeperation) {
         sum.add(other.position);
         count++;
       }
