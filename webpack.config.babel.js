@@ -11,6 +11,8 @@ const extractCss = new ExtractTextPlugin('main.css');
 const headerParam = {
   project: packageInfo.name,
   description: packageInfo.description,
+  source: packageInfo.homepage,
+  license: packageInfo.license,
   commit: execFileSync(
     'git',
     [

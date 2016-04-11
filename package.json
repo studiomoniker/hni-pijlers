@@ -1,10 +1,11 @@
 {
-  "name": "hni-cover",
+  "name": "hni-pijlers",
   "version": "1.0.0",
-  "description": "Template for NHI covers",
+  "description": "Web cover",
   "main": "dist/index.html",
   "author": "Studio Moniker",
   "license": "MIT",
+  "homepage": "https://github.com/studiomoniker/hni-pijlers",
   "devDependencies": {
     "autoprefixer": "^6.3.3",
     "babel-core": "^6.7.2",
