@@ -37,7 +37,8 @@ function tick() {
 
   flock.boids.forEach((boid, index) => {
     const point = boid.averagePosition;
-    elements[index].style.transform = `translate(${point.x}px, ${point.y}px) translate(-50%, -50%)`;
+    const style = elements[index].style;
+    style.transform = style['-webkit-transform'] = `translate(${point.x}px, ${point.y}px) translate(-50%, -50%)`;
   });
   // Show elements:
   containerEl.className = 'container';
