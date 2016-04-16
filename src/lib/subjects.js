@@ -27,7 +27,7 @@ export default {
     },
      {
       name: 'Agentschap',
-      url: 'http://hetnieuweinstituut.nl/architectuur'
+      url: 'http://agentschap.hetnieuweinstituut.nl'
     },
      {
       name: 'Rijksarchief',
