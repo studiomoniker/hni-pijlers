@@ -3,10 +3,15 @@ function postMessage(data) {
 }
 
 function redirect(url) {
-  postMessage({
-    status: 'redirect',
-    domain_path: url
-  });
+  var onHomepage = /homepage\=1/.test(window.location.search);
+  if (onHomepage) {
+    postMessage({
+      status: 'redirect',
+      domain_path: url
+    });
+  } else {
+    window.parent.location = url;
+  }
 }
 
 window.addEventListener('message', function (event) {
